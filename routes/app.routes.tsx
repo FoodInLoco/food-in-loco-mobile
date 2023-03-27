@@ -3,12 +3,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import Home from '../src/pages/Home';
 
-const AppStack = createStackNavigator();
+const Stack = createStackNavigator();
 
 const AppRoutes: React.FC = () => (
-  <AppStack.Navigator>
-    <AppStack.Screen name="Dashboard" component={Home} />
-  </AppStack.Navigator>
+  <Stack.Navigator>
+    <Stack.Screen name='Dashboard' component={Home} />
+  </Stack.Navigator>
 );
 
 export default AppRoutes;

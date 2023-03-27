@@ -1,10 +1,10 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Image } from 'react-native';
-import { TouchableOpacity } from 'react-native';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
+import { View, StyleSheet, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useAuth } from '../../contexts/auth';
-import { RequestSignIn } from '../../interfaces/user/login/request.signIn.interface';
+import { RequestSignUp } from '../../interfaces/user/registration/request.signUp.interface';
+import { Roles } from '../../interfaces/user/roles';
 
 const styles = StyleSheet.create({
   container: {
@@ -67,26 +67,31 @@ const styles = StyleSheet.create({
   },
 });
 
-const SignIn: React.FC = () => {
-  const { signIn } = useAuth();
-  const navigation = useNavigation();
-  const [request, setRequest] = useState<RequestSignIn>({ email: '', password: '' });
+const SignUp: React.FC = () => {
+  const { signUp } = useAuth();
+	const navigation = useNavigation();
   const [errorMessage, setErrorMessage] = useState('');
+  const [request, setRequest] = useState<RequestSignUp>({
+    firstName: '', lastName: '', 
+		email: '', password: '', 
+    ddd: '', phoneNumber: '', 
+    photo: '', roles: Roles.None
+  });
   const imagePath = '../../../assets/foodInLoco.png';
 
-  const handleSignUpPress = () => {
-    // navigation.navigate('SignUp');
+  const handleBackPress = () => {
+    navigation.goBack();
   };
 
   const handleSubmit = async () => {
     try {
-      const response = await signIn(request);
+      const response = await signUp(request);
 
       if (response != null) {
         setErrorMessage(response);
       }
     } catch (error) {
-      setErrorMessage('Email ou senha inválidos!');
+      setErrorMessage('Algum problema encontrado.');
     }
   };
 
@@ -115,11 +120,47 @@ const SignIn: React.FC = () => {
           value={request.password}
           onChangeText={(value) => handleChange('password', value)}
         />
+        <TextInput
+          style={styles.input}
+          placeholder='Confirme sua senha'
+          autoCapitalize='none'
+          secureTextEntry
+          value={request.confirmPassword}
+          onChangeText={(value) => handleChange('confirmPassword', value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Nome'
+          autoCapitalize='none'
+          value={request.firstName}
+          onChangeText={(value) => handleChange('firstName', value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Sobrenome'
+          autoCapitalize='none'
+          value={request.lastName}
+          onChangeText={(value) => handleChange('lastName', value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='DDD'
+          autoCapitalize='none'
+          value={request.ddd}
+          onChangeText={(value) => handleChange('ddd', value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder='Celular'
+          autoCapitalize='none'
+          value={request.phoneNumber}
+          onChangeText={(value) => handleChange('phoneNumber', value)}
+        />
         <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={handleSubmit} style={styles.button}>
-            <Text style={styles.buttonText}>Entrar</Text>
+          <TouchableOpacity onPress={handleBackPress} style={styles.button}>
+            <Text style={styles.buttonText}>Voltar</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleSignUpPress} style={styles.button}>
+          <TouchableOpacity onPress={handleSubmit} style={styles.button}>
             <Text style={styles.buttonText}>Registrar</Text>
           </TouchableOpacity>
         </View>
@@ -129,4 +170,4 @@ const SignIn: React.FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;

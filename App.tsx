@@ -1,16 +1,14 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-
-import { AuthProvider } from './src/contexts/auth';
-
+import { createStackNavigator } from '@react-navigation/stack';
 import Routes from './routes';
+
+const Stack = createStackNavigator();
 
 const App: React.FC = () => {
   return (
     <NavigationContainer>
-      <AuthProvider>
-        <Routes />
-      </AuthProvider>
+      <Routes />
     </NavigationContainer>
   );
 };

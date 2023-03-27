@@ -2,17 +2,16 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import * as auth from '../services/auth';
 import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-interface User {
-  name: string;
-  email: string;
-}
+import { User } from '../interfaces/user/user.interface';
+import { RequestSignIn } from '../interfaces/user/login/request.signIn.interface';
+import { RequestSignUp } from '../interfaces/user/registration/request.signUp.interface';
 
 interface AuthContextData {
   signed: boolean;
   user: User | null;
   loading: boolean;
-  signIn(): Promise<void>;
+  signUp(request: RequestSignUp): Promise<string | void>;
+  signIn(request: RequestSignIn): Promise<string | void>;
   signOut(): void;
 }
 
@@ -38,14 +37,25 @@ const AuthProvider = ({ children }: { children: any }) => {
     loadStorageData();
   });
 
-  async function signIn() {
-    const response = await auth.signIn();
-    setUser(response.user);
+  async function signUp(request: RequestSignUp) {
+    const response = await auth.signUp(request);
+    if (response.data.succeeded)
+      return response.data.message;
+  }
 
-    api.defaults.headers.Authorization = `Baerer ${response.token}`;
+  async function signIn(request: RequestSignIn) {
+    const response = await auth.signIn(request);
+    console.log(response);
+    if (response.data.failed) {
+      return response.data.message;
+    }
 
-    await AsyncStorage.setItem('@RNAuth:user', JSON.stringify(response.user));
-    await AsyncStorage.setItem('@RNAuth:token', response.token);
+    setUser(response.data.data.user);
+
+    api.defaults.headers.Authorization = `Baerer ${response.data.data.token}`;
+
+    await AsyncStorage.setItem('@RNAuth:user', JSON.stringify(response.data.data.user));
+    await AsyncStorage.setItem('@RNAuth:token', response.data.data.token);
   }
 
   async function signOut() {
@@ -55,7 +65,7 @@ const AuthProvider = ({ children }: { children: any }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, loading, signIn, signOut }}>
+      value={{ signed: !!user, user, loading, signUp, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
