@@ -10,8 +10,8 @@ interface AuthContextData {
   signed: boolean;
   user: User | null;
   loading: boolean;
-  signUp(request: RequestSignUp): Promise<string | void>;
   signIn(request: RequestSignIn): Promise<string | void>;
+  signUp(request: RequestSignUp): Promise<string | void>;
   signOut(): void;
 }
 
@@ -38,17 +38,19 @@ const AuthProvider = ({ children }: { children: any }) => {
   });
 
   async function signUp(request: RequestSignUp) {
+    console.log(request);
     const response = await auth.signUp(request);
+    console.log(response);
     if (response.data.succeeded)
       return response.data.message;
   }
 
   async function signIn(request: RequestSignIn) {
+    console.log(request);
     const response = await auth.signIn(request);
     console.log(response);
-    if (response.data.failed) {
+    if (response.data.failed)
       return response.data.message;
-    }
 
     setUser(response.data.data.user);
 
@@ -65,7 +67,7 @@ const AuthProvider = ({ children }: { children: any }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, loading, signUp, signIn, signOut }}>
+      value={{ signed: !!user, user, loading, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );

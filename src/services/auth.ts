@@ -6,11 +6,15 @@ import { RequestSignUp } from '../interfaces/user/registration/request.signUp.in
 import api from './api';
 
 export async function signIn(request: RequestSignIn): Promise<AxiosResponse<ResponseBase<ResponseSignIn>>> {
+  console.log(request);
+
   const response = await api.post('/auth', request);
   return response;
 }
 
 export async function signUp(request: RequestSignUp): Promise<AxiosResponse<ResponseBase<string>>> {
+  console.log(request);
+
   const response = await api.post('/user', request);
   return response;
 }

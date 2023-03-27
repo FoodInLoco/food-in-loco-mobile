@@ -85,12 +85,15 @@ const SignUp: React.FC = () => {
 
   const handleSubmit = async () => {
     try {
+      console.log(request);
       const response = await signUp(request);
-
+      console.log(response);
+      
       if (response != null) {
         setErrorMessage(response);
       }
     } catch (error) {
+      console.log(error);
       setErrorMessage('Algum problema encontrado.');
     }
   };

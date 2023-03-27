@@ -69,23 +69,27 @@ const styles = StyleSheet.create({
 
 const SignIn: React.FC = () => {
   const { signIn } = useAuth();
+  console.log(signIn);
   const navigation = useNavigation();
   const [request, setRequest] = useState<RequestSignIn>({ email: '', password: '' });
   const [errorMessage, setErrorMessage] = useState('');
   const imagePath = '../../../assets/foodInLoco.png';
 
   const handleSignUpPress = () => {
-    // navigation.navigate('SignUp');
+    navigation.navigate('SignUp');
   };
 
   const handleSubmit = async () => {
     try {
+      console.log(request);
       const response = await signIn(request);
+      console.log(response);
 
       if (response != null) {
         setErrorMessage(response);
       }
     } catch (error) {
+      console.log(error);
       setErrorMessage('Email ou senha inválidos!');
     }
   };
